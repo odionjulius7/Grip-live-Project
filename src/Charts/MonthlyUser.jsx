@@ -46,7 +46,7 @@ function MonthlyUser() {
   console.log(monthU);
 
   return (
-    <BarChart width={730} height={320} data={monthU}>
+    <BarChart width={650} height={320} data={monthU}>
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="name" />
       <YAxis />

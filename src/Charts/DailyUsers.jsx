@@ -21,7 +21,7 @@ const data = [
 
 function DailyUsers() {
   return (
-    <BarChart width={350} height={320} data={data}>
+    <BarChart width={300} height={320} data={data}>
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="name" />
       <YAxis />
