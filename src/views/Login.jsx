@@ -57,11 +57,14 @@ const Login = () => {
       <br />
       <br />
       <br />
-      <div className="my-5 w-25 bg-white rounded-3 mx-auto p-4">
+      <div
+        className="my-5 bg-white rounded-3 mx-auto p-4"
+        style={{ maxWidth: "400px" }}
+      >
         <h3 className="text-center title">Login</h3>
         <p className="text-center">Login to your account to continue.</p>
         <div className="error text-center">
-          {message.message == "Rejected" ? "You are not an Admin" : ""}
+          {message.message === "Rejected" ? "You are not an Admin" : ""}
         </div>
         <form action="" onSubmit={formik.handleSubmit}>
           <CustomInput
@@ -74,7 +77,6 @@ const Login = () => {
             val={formik.values.email}
           />
           <div className="error mt-2">
-            {/* style the error text color */}
             {formik.touched.email && formik.errors.email}
           </div>
           <CustomInput
@@ -89,11 +91,6 @@ const Login = () => {
           <div className="error mt-2">
             {formik.touched.password && formik.errors.password}
           </div>
-          {/* <div className="mb-3 text-end">
-            <Link to="forgot-password" className="">
-              Forgot Password?
-            </Link>
-          </div> */}
           <button
             className="border-0 px-3 py-2 text-white fw-bold w-100 text-center text-decoration-none fs-5"
             style={{ background: "blue" }}
