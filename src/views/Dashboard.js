@@ -207,10 +207,10 @@ function Dashboard() {
           </Col>
         </Row>
         <Row>
-          <Col md="8">
+          <Col md="10">
             <Card>
               <Card.Header>
-                <Card.Title as="h4"> Monthly Posts</Card.Title>
+                <Card.Title as="h4">Monthly Posts</Card.Title>
                 {/* <p className="card-category">24 Hours performance</p> */}
               </Card.Header>
               <Card.Body>
