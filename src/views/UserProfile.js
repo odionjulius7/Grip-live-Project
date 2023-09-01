@@ -247,7 +247,7 @@ function User() {
               </Card.Body>
               <hr></hr>
               <div className="button-container mr-auto ml-auto my-3">
-                {user?.role === "user" && (
+                {user?.role === "user" && !user?.status ? (
                   <Button
                     className="btn-outlined btn-icon"
                     // href="#"
@@ -261,6 +261,8 @@ function User() {
                     {/* <i className="fab fa-facebook-square"></i> */}
                     Make A Creator
                   </Button>
+                ) : (
+                  ""
                 )}
                 {user?.role === "creator" && !user?.status ? (
                   <Button
@@ -276,6 +278,9 @@ function User() {
                     Suspend creator
                   </Button>
                 ) : (
+                  ""
+                )}
+                {user?.status ? (
                   <Button
                     className="btn-outlined btn-icon"
                     // href="#"
@@ -288,6 +293,8 @@ function User() {
                     {/* <i className="fab fa-twitter"></i> */}
                     Unsuspend creator
                   </Button>
+                ) : (
+                  ""
                 )}
                 {/* <Button
                   className="btn-outlined btn-icon"
