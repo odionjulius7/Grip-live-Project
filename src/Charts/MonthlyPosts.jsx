@@ -1,4 +1,8 @@
-import React from "react";
+import { getMonthlyPost } from "features/Post/postSlice";
+import { getDailyPosts } from "features/Post/postSlice";
+// import moment from "moment";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   BarChart,
   Bar,
@@ -25,8 +29,35 @@ const data = [
 ];
 
 function MonthlyPosts() {
+  // user token
+  //
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // user token
+  const dispatch = useDispatch();
+  // const postState = useSelector((state) => state.post);
+  // const { monthlyPosts } = postState;
+
+  // useEffect(() => {
+  //   dispatch(getMonthlyPost(token));
+  // }, []);
+
+  // let monthly = [];
+
+  // if (monthlyPosts) {
+  //   monthlyPosts?.forEach((key) => {
+  //     monthly.push({
+  //       name: key?.month.slice(0, 3),
+  //       value: key?.postCount,
+  //     });
+  //   });
+  // }
+
+  // console.log(monthly);
+
   return (
-    <BarChart width={730} height={320} data={data}>
+    <BarChart width={650} height={320} data={data}>
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="name" />
       <YAxis />

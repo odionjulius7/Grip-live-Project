@@ -1,56 +1,93 @@
 import axios from "axios";
-import { config } from "../../utils/axiosconfig";
+// import { config } from "../../utils/axiosconfig";
 import { base_url } from "../../utils/baseUrl";
+import { generateAxiosConfig } from "utils/axiosconfig";
 
-const getUsers = async (num) => {
+const getUsers = async (nums) => {
+  const config = generateAxiosConfig(nums.token);
   const response = await axios.get(
-    `${base_url}user/all?page=${num}&limit=15&role=user`, // because users and creators are same array i'm separating them
+    `${base_url}user/all?page=${nums.num}&limit=15&role=user`, // because users and creators are same array i'm separating them
     config
   );
-  // console.log(nums.user);
+  // console.log(config);
   return response.data;
 };
 
-const getSuspUsers = async (num) => {
+const getSuspUsers = async (nums) => {
+  const config = generateAxiosConfig(nums.token);
   const response = await axios.get(
-    `${base_url}user/all?page=${num}&limit=20`, // because users and creators are same array i'm separating them
+    `${base_url}user/all?page=${nums.num}&limit=20`, // because users and creators are same array i'm separating them
     config
   );
 
   return response.data;
 };
 
-const getCreatorUsers = async (num) => {
+const getCreatorUsers = async (nums) => {
+  const config = generateAxiosConfig(nums.token);
   const response = await axios.get(
-    `${base_url}user/all?page=${num}&limit=15&role=creator`,
+    `${base_url}user/all?page=${nums.num}&limit=15&role=creator`,
     config
   );
   // console.log(response?.data?.data);
   return response.data;
 };
 
-const getUsersAggregate = async () => {
+const getUsersAggregate = async (token) => {
+  const config = generateAxiosConfig(token);
   const response = await axios.get(`${base_url}user/summary`, config);
   // console.log(response);
   return response.data.data;
 };
 
-const getAUser = async (id) => {
-  const response = await axios.get(`${base_url}user/${id}`, config);
+const getAUser = async (ids) => {
+  const config = generateAxiosConfig(ids.token);
+  const response = await axios.get(`${base_url}user/${ids.id}`, config);
 
   return response.data?.data;
 };
-const getMonthlyUsers = async () => {
+const suspendAUser = async (ids) => {
+  console.log(ids.token);
+  const config = generateAxiosConfig(ids.token);
+  const response = await axios.patch(
+    `${base_url}user/suspend/${ids.id}`,
+    config
+  );
+
+  return response.data?.data;
+};
+
+const getMonthlyUsers = async (token) => {
+  const config = generateAxiosConfig(token);
   const response = await axios.get(`${base_url}user/monthly`, config);
+  // console.log(response.data?.data);
+  return response.data?.data;
+};
+
+const getDailyUsers = async (token) => {
+  const config = generateAxiosConfig(token);
+  const response = await axios.get(`${base_url}user/daily`, config);
 
   return response.data?.data;
 };
-const changeUserRole = async (id) => {
+
+const changeUserRole = async (ids) => {
+  const config = generateAxiosConfig(ids.token);
   const response = await axios.post(
-    `${base_url}user/role/${id}`,
+    `${base_url}user/role/${ids.id}`,
     {
       userType: "creator",
     },
+    config
+  );
+  // console.log(response);
+  return response.data?.data;
+};
+
+const getUsersByTopics = async (items) => {
+  const config = generateAxiosConfig(items.token);
+  const response = await axios.get(
+    `${base_url}user/all?topic=${items.item}`,
     config
   );
   // console.log(response);
@@ -65,6 +102,9 @@ const usersService = {
   changeUserRole,
   getSuspUsers,
   getMonthlyUsers,
+  getDailyUsers,
+  getUsersByTopics,
+  suspendAUser,
 };
 
 export default usersService;

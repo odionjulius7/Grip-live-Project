@@ -23,6 +23,12 @@ import { getAPostComments } from "features/Post/postSlice";
 import { approvePost } from "features/Post/postSlice";
 
 function Post() {
+  // user token
+  //
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // user token
   const [num, setNum] = useState(1);
   const location = useLocation();
   const id = location.pathname.split("/")[3];
@@ -87,15 +93,16 @@ function Post() {
   }, [isError, updatedPost]);
 
   useEffect(() => {
+    const ids = { id, token };
     dispatch(resetState());
-    dispatch(getAPost(id));
+    dispatch(getAPost(ids));
   }, [id, updatedPost]);
 
-  const ids = { id, num };
   useEffect(() => {
+    const ids = { id, num, token };
     dispatch(getAPostComments(ids));
   }, [id, num]);
-  console.log(aPostComments);
+  // console.log(aPostComments);
 
   return (
     <>

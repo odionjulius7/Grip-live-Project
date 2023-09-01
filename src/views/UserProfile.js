@@ -1,32 +1,315 @@
-import React from "react";
+import React, { useEffect } from "react";
 
+import moment from "moment";
 // react-bootstrap components
-import {
-  Badge,
-  Button,
-  Card,
-  Form,
-  Navbar,
-  Nav,
-  Container,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Button, Card, Container, Row, Col, Table } from "react-bootstrap";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { changeUserRole } from "features/Users/usersSlice";
+import { resetState } from "features/Users/usersSlice";
+import { getAUser } from "features/Users/usersSlice";
+import { getAUserPosts } from "features/Post/postSlice";
+import { suspendAUser } from "features/Users/usersSlice";
 
 function User() {
+  //
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // const user = false;
+  // const creator = true;
   const location = useLocation();
   const id = location.pathname.split("/")[3];
-  console.log(id);
+  // console.log(id);
+
+  // Prev
+  const dispatch = useDispatch();
+  const userState = useSelector((state) => state.users);
+  const auserPostsState = useSelector((state) => state.post);
+
+  const { isSuccess, isError, isLoading, user, updatedRole, suspendAU } =
+    userState;
+  const { aUserPosts } = auserPostsState;
+
+  useEffect(() => {
+    if (isSuccess && updatedRole) {
+      toast.success("Role Updated Successfully!");
+    }
+    if (isError) {
+      toast.error("Something Went Wrong!");
+    }
+  }, [isSuccess, isError, updatedRole]);
+  useEffect(() => {
+    if (isSuccess && suspendAU) {
+      toast.success("Creator Suspended!");
+    }
+    if (isError) {
+      toast.error("Something Went Wrong!");
+    }
+  }, [isSuccess, isError, suspendAU]);
+
+  useEffect(() => {
+    const ids = { id, token };
+    dispatch(resetState());
+    dispatch(getAUser(ids));
+  }, [id, updatedRole]);
+
+  useEffect(() => {
+    const ids = { id, token };
+    // dispatch(resetState());
+    dispatch(getAUserPosts(ids));
+  }, [id]);
+
+  console.log(suspendAU);
+
   return (
     <>
       <Container fluid>
         <Row>
-          <Col md="8">
-            <Card>
-              <Card.Header>
-                <Card.Title as="h4">Edit Profile</Card.Title>
-              </Card.Header>
+          {user?.role === "user" && (
+            <Col md="8">
+              <Row>
+                <Card className="strpied-tabled-with-hover">
+                  <Card.Header className="d-flex justify-content-between">
+                    <div>
+                      <Card.Title as="h4">
+                        List of Posts Commented on
+                      </Card.Title>
+                    </div>
+                  </Card.Header>
+                  <Card.Body className="table-full-width table-responsive px-0">
+                    <Table className="table-hover table-striped">
+                      <thead>
+                        <tr>
+                          <th className="border-0">Title</th>
+                          <th className="border-0">Author</th>
+                          <th className="border-0">comment</th>
+                          <th className="border-0">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Niger</td>
+                          <td>Dakota Rice</td>
+                          <td>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Maxime mollitia, molestiae quas vel sint
+                            commodi repudiandae consequuntur voluptatum laborum
+                            numquam
+                          </td>
+                          <td>Dakota Rice</td>
+                        </tr>
+                        <tr>
+                          <td>Niger</td>
+                          <td>Dakota Rice</td>
+                          <td>Dakota Rice</td>
+                          <td>Dakota Rice</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+              </Row>
+              <Row>
+                <Card className="strpied-tabled-with-hover mr-3">
+                  <Card.Header className="d-flex justify-content-between">
+                    <div>
+                      <Card.Title as="h4">All Liked Posts</Card.Title>
+                    </div>
+                  </Card.Header>
+                  <Card.Body className="table-full-width table-responsive px-0">
+                    <Table className="table-hover table-striped">
+                      <thead>
+                        <tr>
+                          <th className="border-0">Title</th>
+                          <th className="border-0">Author</th>
+                          <th className="border-0">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Niger</td>
+                          <td>Dakota Rice</td>
+                          <td>Dakota Rice</td>
+                        </tr>
+                        <tr>
+                          <td>Niger</td>
+                          <td>Dakota Rice</td>
+                          <td>Dakota Rice</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+                <Card className="strpied-tabled-with-hover">
+                  <Card.Header className="d-flex justify-content-between">
+                    <div>
+                      <Card.Title as="h4">List of bookmarks</Card.Title>
+                    </div>
+                  </Card.Header>
+                  <Card.Body className="table-full-width table-responsive px-0">
+                    <Table className="table-hover table-striped">
+                      <thead>
+                        <tr>
+                          <th className="border-0">Title</th>
+                          <th className="border-0">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Niger</td>
+                          <td>Dakota Rice</td>
+                        </tr>
+                        <tr>
+                          <td>Niger</td>
+                          <td>Dakota Rice</td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+              </Row>
+            </Col>
+          )}
+
+          {user?.role === "creator" && (
+            <Col md="8">
+              <Row>
+                <Card className="strpied-tabled-with-hover">
+                  <Card.Header className="d-flex justify-content-between">
+                    <div>
+                      <Card.Title as="h4">
+                        List of Posts Commented on
+                      </Card.Title>
+                    </div>
+                  </Card.Header>
+                  <Card.Body className="table-full-width table-responsive px-0">
+                    <Table className="table-hover table-striped">
+                      <thead>
+                        <tr>
+                          <th className="border-0">Title</th>
+                          <th className="border-0">Author</th>
+                          <th className="border-0">no comment</th>
+                          <th className="border-0">no of likes</th>
+                          <th className="border-0">bible ref.</th>
+                          <th className="border-0">date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {aUserPosts?.map((post, i) => (
+                          <tr key={i}>
+                            <td>{post?.title}</td>
+                            <td>{post?.User?.username}</td>
+                            <td>{post?.CommentCount}</td>
+                            <td>{post?.likeCount}</td>
+                            <td>{post?.bible_book}</td>
+                            <td>{moment(post?.createdAt).format("L")}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </Card.Body>
+                </Card>
+              </Row>
+            </Col>
+          )}
+          <Col md="4">
+            <Card className="card-user">
+              <div className="card-image">
+                <img
+                  alt="..."
+                  src={require("assets/img/photo-1431578500526-4d9613015464.jpeg")}
+                ></img>
+              </div>
+              <Card.Body>
+                <div className="author">
+                  <a href="#" onClick={(e) => e.preventDefault()}>
+                    <img
+                      alt="..."
+                      className="avatar border-gray"
+                      src={require("assets/img/faces/face-3.jpg")}
+                    ></img>
+                    <h5 className="title">{user?.username}</h5>
+                  </a>
+                  <p className="description">Email: {user?.email}</p>
+                  <p className="description">
+                    Phone No. {user?.phone ? user?.phone : "N/A"}
+                  </p>
+                  <p className="description">Date Joined: 12/09/2023</p>
+                </div>
+                <div className="description text-center">
+                  {/* <div>no of likes, no of comments, no of bookmarks</div> */}
+                  <span className="mx-1 text-info">likes: 15</span> |{" "}
+                  <span className="mx-1 text-muted">comments: 15</span> |{" "}
+                  <span className="mx-1 text-warning">bookmarks: 15</span>
+                </div>
+              </Card.Body>
+              <hr></hr>
+              <div className="button-container mr-auto ml-auto my-3">
+                {user?.role === "user" && (
+                  <Button
+                    className="btn-outlined btn-icon"
+                    // href="#"
+                    // onClick={(e) => e.preventDefault()}
+                    variant="info"
+                    onClick={() => {
+                      const ids = { id, token };
+                      dispatch(changeUserRole(ids));
+                    }}
+                  >
+                    {/* <i className="fab fa-facebook-square"></i> */}
+                    Make A Creator
+                  </Button>
+                )}
+                {user?.role === "creator" && !user?.status ? (
+                  <Button
+                    className="btn-outlined btn-icon"
+                    // href="#"
+                    onClick={() => {
+                      const ids = { id, token };
+                      dispatch(suspendAUser(ids));
+                    }}
+                    variant="warning"
+                  >
+                    {/* <i className="fab fa-twitter"></i> */}
+                    Suspend creator
+                  </Button>
+                ) : (
+                  <Button
+                    className="btn-outlined btn-icon"
+                    // href="#"
+                    onClick={() => {
+                      const ids = { id, token };
+                      // dispatch(suspendAUser(ids));
+                    }}
+                    variant="warning"
+                  >
+                    {/* <i className="fab fa-twitter"></i> */}
+                    Unsuspend creator
+                  </Button>
+                )}
+                {/* <Button
+                  className="btn-outlined btn-icon"
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  variant="link"
+                >
+                  <i className="fab fa-google-plus-square"></i>
+                </Button> */}
+              </div>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </>
+  );
+}
+
+export default User;
+
+{
+  /* <Card>
               <Card.Body>
                 <Form>
                   <Row>
@@ -153,67 +436,5 @@ function User() {
                   <div className="clearfix"></div>
                 </Form>
               </Card.Body>
-            </Card>
-          </Col>
-          <Col md="4">
-            <Card className="card-user">
-              <div className="card-image">
-                <img
-                  alt="..."
-                  src={require("assets/img/photo-1431578500526-4d9613015464.jpeg")}
-                ></img>
-              </div>
-              <Card.Body>
-                <div className="author">
-                  <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                    <img
-                      alt="..."
-                      className="avatar border-gray"
-                      src={require("assets/img/faces/face-3.jpg")}
-                    ></img>
-                    <h5 className="title">Mike Andrew</h5>
-                  </a>
-                  <p className="description">michael24</p>
-                </div>
-                <p className="description text-center">
-                  "Lamborghini Mercy <br></br>
-                  Your chick she so thirsty <br></br>
-                  I'm in that two seat Lambo"
-                </p>
-              </Card.Body>
-              <hr></hr>
-              <div className="button-container mr-auto ml-auto">
-                <Button
-                  className="btn-simple btn-icon"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
-                >
-                  <i className="fab fa-facebook-square"></i>
-                </Button>
-                <Button
-                  className="btn-simple btn-icon"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
-                >
-                  <i className="fab fa-twitter"></i>
-                </Button>
-                <Button
-                  className="btn-simple btn-icon"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-                  variant="link"
-                >
-                  <i className="fab fa-google-plus-square"></i>
-                </Button>
-              </div>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
-    </>
-  );
+            </Card> */
 }
-
-export default User;

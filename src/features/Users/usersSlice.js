@@ -7,45 +7,71 @@ const initialState = {
   isError: false,
   isLoading: false,
   isSuccess: false,
+  isSuccessRole: false,
   message: "",
   person: null,
 };
 
 export const getUsers = createAsyncThunk(
   "users/get-users",
-  async (num, thunkAPI) => {
+  async (nums, thunkAPI) => {
     try {
-      return await usersService.getUsers(num);
+      return await usersService.getUsers(nums);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
+
+export const getUsersByTopics = createAsyncThunk(
+  "users/get-users-by-topics",
+  async (items, thunkAPI) => {
+    try {
+      return await usersService.getUsersByTopics(items);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 export const getSuspUsers = createAsyncThunk(
   "users/get-suspended-users",
-  async (num, thunkAPI) => {
+  async (nums, thunkAPI) => {
     try {
-      return await usersService.getSuspUsers(num);
+      return await usersService.getSuspUsers(nums);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
+
 export const getCreatorUsers = createAsyncThunk(
   "users/get-creator-users",
-  async (num, thunkAPI) => {
+  async (nums, thunkAPI) => {
     try {
-      return await usersService.getCreatorUsers(num);
+      return await usersService.getCreatorUsers(nums);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
+
 export const getMonthlyUsers = createAsyncThunk(
   "users/get-monthly-users",
-  async (thunkAPI) => {
+  async (token, thunkAPI) => {
     try {
-      return await usersService.getMonthlyUsers();
+      return await usersService.getMonthlyUsers(token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const getDailyUsers = createAsyncThunk(
+  "users/get-daily-users",
+  async (token, thunkAPI) => {
+    try {
+      return await usersService.getDailyUsers(token);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -54,9 +80,9 @@ export const getMonthlyUsers = createAsyncThunk(
 
 export const getUsersAggregate = createAsyncThunk(
   "users/get-Aggregate",
-  async (thunkAPI) => {
+  async (token, thunkAPI) => {
     try {
-      return await usersService.getUsersAggregate();
+      return await usersService.getUsersAggregate(token);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -65,19 +91,30 @@ export const getUsersAggregate = createAsyncThunk(
 
 export const getAUser = createAsyncThunk(
   "user/get-a-user",
-  async (id, thunkAPI) => {
+  async (ids, thunkAPI) => {
     try {
-      return await usersService.getAUser(id);
+      return await usersService.getAUser(ids);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
+export const suspendAUser = createAsyncThunk(
+  "user/suspend-a-user",
+  async (ids, thunkAPI) => {
+    try {
+      return await usersService.suspendAUser(ids);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 export const changeUserRole = createAsyncThunk(
   "user/change-user-role",
-  async (id, thunkAPI) => {
+  async (ids, thunkAPI) => {
     try {
-      return await usersService.changeUserRole(id);
+      return await usersService.changeUserRole(ids);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -112,6 +149,21 @@ export const usersSlice = createSlice({
         state.message = action.error;
         state.isLoading = false;
       })
+      // Get User By Topics
+      .addCase(getUsersByTopics.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUsersByTopics.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.usersTopics = action.payload;
+        state.message = "success";
+      })
+      .addCase(getUsersByTopics.rejected, (state, action) => {
+        state.isError = true;
+        state.message = action.error;
+        state.isLoading = false;
+      })
       // Get Susp. Users
       .addCase(getSuspUsers.pending, (state) => {
         state.isLoading = true;
@@ -124,6 +176,23 @@ export const usersSlice = createSlice({
         state.message = "success";
       })
       .addCase(getSuspUsers.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      // Get Susp. Users
+      .addCase(suspendAUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(suspendAUser.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.suspendAU = action.payload;
+        state.message = "success";
+      })
+      .addCase(suspendAUser.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
@@ -187,11 +256,26 @@ export const usersSlice = createSlice({
       .addCase(getMonthlyUsers.fulfilled, (state, action) => {
         state.isError = false;
         state.isLoading = false;
-        state.isSuccess = true;
         state.monthlyUser = action.payload;
         state.message = "success";
       })
       .addCase(getMonthlyUsers.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      // get monthly users
+      .addCase(getDailyUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getDailyUsers.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isSuccess = true;
+        state.dailyUser = action.payload;
+        state.message = "success";
+      })
+      .addCase(getDailyUsers.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
@@ -204,13 +288,13 @@ export const usersSlice = createSlice({
       .addCase(changeUserRole.fulfilled, (state, action) => {
         state.isError = false;
         state.isLoading = false;
-        state.isSuccess = true;
+        state.isSuccessRole = true;
         state.updatedRole = action.payload;
         state.message = "success";
       })
       .addCase(changeUserRole.rejected, (state, action) => {
         state.isError = true;
-        state.isSuccess = false;
+        state.isSuccessRole = false;
         state.message = action.error;
         state.isLoading = false;
       })

@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const getUserfromLocalStorage = localStorage.getItem("grip")
   ? JSON.parse(localStorage.getItem("grip"))
   : null;
-
+// console.log(getUserfromLocalStorage);
 const initialState = {
   user: getUserfromLocalStorage,
   isError: false,
@@ -27,28 +27,10 @@ export const login = createAsyncThunk(
   }
 );
 
-// export const getOrders = createAsyncThunk(
-//   "order/get-orders",
-//   async (thunkAPI) => {
-//     try {
-//       return await authService.getOrders();
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(error);
-//     }
-//   }
-// );
-
 export const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
-  reducers: {
-    // loginUser: (state, action) => {
-    //   const { password, email, role } = action.payload;
-    //   state.user.password = password;
-    //   state.user.email = email;
-    //   state.user.role = role;
-    // },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // Login

@@ -25,15 +25,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function Posts() {
+  // user token
+  //
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // user token
   const dispatch = useDispatch();
   const postState = useSelector((state) => state.post);
-  const history = useHistory();
+  // const history = useHistory();
 
   const { deletedPost, isSuccessDel, isSuccessStatus } = postState;
   const posts = postState?.posts;
   useEffect(() => {
     dispatch(resetState()); // at first render alway clear the state(like loading, success etc)
-    dispatch(getPosts());
+    dispatch(getPosts(token));
     // dispatch(getApprovePosts());
   }, [deletedPost]);
 
@@ -50,7 +56,8 @@ function Posts() {
   };
 
   const handleDeletePost = () => {
-    dispatch(deletePost(id));
+    const ids = { id, token };
+    dispatch(deletePost(ids));
     setOpen(false);
     if (isSuccessDel) {
       toast.success("Post Deleted Successfully");
@@ -60,7 +67,8 @@ function Posts() {
   const setPostStatus = (e) => {
     console.log(e);
     const item = e;
-    dispatch(getApprovePosts(item));
+    const items = { item, token };
+    dispatch(getApprovePosts(items));
   };
 
   return (

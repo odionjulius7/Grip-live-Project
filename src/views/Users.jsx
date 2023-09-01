@@ -1,5 +1,9 @@
+import CustomModal from "components/CustomModal";
 import { getUsers } from "features/Users/usersSlice";
+import { getUsersByTopics } from "features/Users/usersSlice";
+import { changeUserRole } from "features/Users/usersSlice";
 import { resetState } from "features/Users/usersSlice";
+import { getCategories } from "features/category/categorySlice";
 import moment from "moment/moment";
 import React, { useEffect, useState } from "react";
 
@@ -16,25 +20,81 @@ import {
   Col,
   Tooltip,
   OverlayTrigger,
+  Form,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { toast } from "react-toastify";
 
 const Users = () => {
+  // user token
+  //
+  const categoryState = useSelector((state) => state.category.category);
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // user token
   const [num, setNum] = useState(1);
   const dispatch = useDispatch();
   const usersState = useSelector((state) => state.users);
+  const roleState = useSelector((state) => state.users);
 
+  let { updatedRole, usersTopics } = roleState;
   let data2 = usersState?.users?.data;
+  let data3 = usersTopics;
   data2 = data2?.filter((user) => user?.role === "user" && !user?.status);
-  // data2 = data2?.filter((user) => !user?.status);
+  data3 = data3?.filter((user) => user?.role === "user" && !user?.status);
+
+  //
+
+  // Approve Users
+  const [open, setOpen] = useState(false);
+  const [id, setId] = useState("");
+  const showModal = (e) => {
+    setOpen(true);
+    setId(e);
+  };
+
+  const hideModal = () => {
+    setOpen(false);
+  };
+
+  const handleMakeCreator = () => {
+    const ids = { id, token };
+    dispatch(resetState());
+    dispatch(changeUserRole(ids));
+    setOpen(false);
+  };
+
+  // Set Category
+  const categorySelect = []; // set a coloropt array
+  categoryState?.data?.forEach((i) => {
+    categorySelect.push({
+      name: i.name,
+      value: i.name,
+    });
+  });
+
+  const setPostStatus = (e) => {
+    console.log(e);
+    const item = e;
+    const items = { item, token };
+    dispatch(getUsersByTopics(items));
+  };
+
+  console.log(usersTopics);
 
   useEffect(() => {
+    const nums = { num, token };
     dispatch(resetState());
-    dispatch(getUsers(num));
-  }, [num]);
+    dispatch(getUsers(nums));
+  }, [num, updatedRole]);
 
-  // Users
+  useEffect(() => {
+    dispatch(getCategories(token));
+  }, []);
+
+  const usersAggregate = data3 ? data3 : data2;
 
   return (
     <>
@@ -42,11 +102,33 @@ const Users = () => {
         <Row>
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
-              <Card.Header>
+              <Card.Header className="d-flex justify-content-between">
                 <Card.Title as="h4">Users' List</Card.Title>
-                <p className="card-category">
-                  Here is a subtitle for this table
-                </p>
+
+                <Form.Group className="p-3">
+                  <Form.Select
+                    // defaultValue={enqState[i].status ? enqState[i].status : "Submitted"}
+                    style={{
+                      border: "1px solid grey !important",
+                      width: "230px",
+                      height: "30px",
+                      paddingLeft: "10px",
+                      borderRadius: "5px",
+                    }}
+                    aria-label="Default select example"
+                    // value={categorySelect?.value}
+                    onChange={(e) => setPostStatus(e.target.value)}
+                  >
+                    <option>filter users by topics followed...</option>
+                    {categorySelect.map((i, j) => {
+                      return (
+                        <option key={j} value={i.value}>
+                          {i.name}
+                        </option>
+                      );
+                    })}
+                  </Form.Select>
+                </Form.Group>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <Table className="table-hover table-striped">
@@ -63,7 +145,7 @@ const Users = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data2?.map((user, i) => {
+                    {usersAggregate?.map((user, i) => {
                       return (
                         <tr key={i}>
                           {/* <td>{i + 1}</td> */}
@@ -95,7 +177,7 @@ const Users = () => {
                                 className="btn-simple btn-link p-1"
                                 type="button"
                                 variant="success"
-                                // onClick={() => showModal(post?.id)}
+                                onClick={() => showModal(user?.id)}
                               >
                                 <i
                                   style={{ fontSize: "1.4rem" }}
@@ -132,6 +214,14 @@ const Users = () => {
           </Col>
         </Row>
       </Container>
+      <CustomModal
+        handleClose={hideModal}
+        show={open}
+        performAction={() => {
+          handleMakeCreator();
+        }}
+        title="Are you sure you want make this user a creator?"
+      />
     </>
   );
 };

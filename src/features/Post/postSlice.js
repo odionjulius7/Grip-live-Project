@@ -10,18 +10,21 @@ const initialState = {
   message: "",
 };
 
-export const getPosts = createAsyncThunk("post/get-posts", async (thunkAPI) => {
-  try {
-    return await postService.getPosts();
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error);
+export const getPosts = createAsyncThunk(
+  "post/get-posts",
+  async (token, thunkAPI) => {
+    try {
+      return await postService.getPosts(token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
   }
-});
+);
 export const getApprovePosts = createAsyncThunk(
   "post/get-approved-posts",
-  async (item, thunkAPI) => {
+  async (items, thunkAPI) => {
     try {
-      return await postService.getApprovedPosts(item);
+      return await postService.getApprovedPosts(items);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -30,9 +33,9 @@ export const getApprovePosts = createAsyncThunk(
 
 export const getAPost = createAsyncThunk(
   "post/get-a-post",
-  async (id, thunkAPI) => {
+  async (ids, thunkAPI) => {
     try {
-      return await postService.getAPost(id);
+      return await postService.getAPost(ids);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -40,9 +43,9 @@ export const getAPost = createAsyncThunk(
 );
 export const getAUserPosts = createAsyncThunk(
   "post/get-user-posts",
-  async (id, thunkAPI) => {
+  async (ids, thunkAPI) => {
     try {
-      return await postService.getAUserPosts(id);
+      return await postService.getAUserPosts(ids);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -61,19 +64,20 @@ export const getAPostComments = createAsyncThunk(
 
 export const deletePostComment = createAsyncThunk(
   "post/delete-post-comment",
-  async (id, thunkAPI) => {
+  async (ids, thunkAPI) => {
     try {
-      return await postService.deletePostComment(id);
+      return await postService.deletePostComment(ids);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
+
 export const deletePost = createAsyncThunk(
   "post/delete-post",
-  async (id, thunkAPI) => {
+  async (ids, thunkAPI) => {
     try {
-      return await postService.deletePost(id);
+      return await postService.deletePost(ids);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -82,19 +86,43 @@ export const deletePost = createAsyncThunk(
 
 export const approvePost = createAsyncThunk(
   "post/approve-post",
-  async (id, thunkAPI) => {
+  async (ids, thunkAPI) => {
     try {
-      return await postService.approvePost(id);
+      return await postService.approvePost(ids);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
+
 export const unApprovePost = createAsyncThunk(
   "post/unApprove-post",
-  async (id, thunkAPI) => {
+  async (ids, thunkAPI) => {
     try {
-      return await postService.unApprovePost(id);
+      return await postService.unApprovePost(ids);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+// Graph   getMonthlyPost,
+export const getMonthlyPost = createAsyncThunk(
+  "users/get-monthly-users",
+  async (token, thunkAPI) => {
+    try {
+      return await postService.getMonthlyPost(token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const getDailyPosts = createAsyncThunk(
+  "users/get-daily-users",
+  async (token, thunkAPI) => {
+    try {
+      return await postService.getDailyPosts(token);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -154,6 +182,40 @@ export const postSlice = createSlice({
         state.message = "success";
       })
       .addCase(getAUserPosts.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      // get monthly Posts
+      .addCase(getMonthlyPost.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getMonthlyPost.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.monthlyPosts = action.payload;
+        state.message = "success";
+      })
+      .addCase(getMonthlyPost.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      // get Daily Posts
+      .addCase(getDailyPosts.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getDailyPosts.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.dailyPosts = action.payload;
+        state.message = "success";
+      })
+      .addCase(getDailyPosts.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;

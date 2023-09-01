@@ -1,4 +1,6 @@
-import React from "react";
+import { getCategories } from "features/category/categorySlice";
+import moment from "moment";
+import React, { useEffect } from "react";
 
 // react-bootstrap components
 import {
@@ -12,8 +14,17 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 
 function Tags() {
+  const dispatch = useDispatch();
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  const categoryState = useSelector((state) => state.category.category);
+  useEffect(() => {
+    dispatch(getCategories(token));
+  }, []);
+  // console.log(categoryState?.data);
   return (
     <>
       <Container style={{ padding: "1rem 10rem" }} fluid>
@@ -27,17 +38,19 @@ function Tags() {
                 <Table className="table-hover table-striped">
                   <thead>
                     <tr>
-                      <th className="border-0">ID</th>
+                      {/* <th className="border-0">ID</th> */}
                       <th className="border-0">Name</th>
-                      <th className="border-0">Others</th>
+                      <th className="border-0">Date Added</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>Dakota Rice</td>
-                      <td>$36,738</td>
-                    </tr>
+                    {categoryState?.data?.map((category, i) => (
+                      <tr key={i}>
+                        {/* <td>1</td> */}
+                        <td>{category?.name}</td>
+                        <td>{moment(category?.createdAt).format("L")}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </Table>
               </Card.Body>

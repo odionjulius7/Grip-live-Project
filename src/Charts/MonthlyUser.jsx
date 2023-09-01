@@ -27,23 +27,30 @@ const data = [
 ];
 
 function MonthlyUser() {
+  // user token
+  //
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // user token
   const dispatch = useDispatch();
   const usersState = useSelector((state) => state.users);
   let monthlyUsers = usersState?.monthlyUser;
 
   useEffect(() => {
-    dispatch(getMonthlyUsers());
+    dispatch(getMonthlyUsers(token));
   }, []);
 
   const monthU = [];
   if (monthlyUsers) {
     Object.keys(monthlyUsers).forEach((key) => {
       const value = monthlyUsers[key];
-      monthU.push({ name: key, value: value });
+      monthU.push({ name: key.slice(0, 3), value: value });
     });
   }
 
-  console.log(monthU);
+  // console.log(monthU);
+  // console.log(monthlyUsers);
 
   return (
     <BarChart width={650} height={320} data={monthU}>

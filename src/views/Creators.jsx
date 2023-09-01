@@ -20,9 +20,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 function Creators() {
-  const [num, setNum] = useState(1);
+  // user token
+  //
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // user token
 
-  // const [user, setUser] = useState("creator");
+  const [num, setNum] = useState(1);
   const dispatch = useDispatch();
   const usersState = useSelector((state) => state.users);
 
@@ -30,11 +35,12 @@ function Creators() {
   data2 = data2?.filter((user) => user?.role === "creator" && !user?.status);
 
   useEffect(() => {
+    const nums = { num, token };
     dispatch(resetState());
-    dispatch(getCreatorUsers(num));
+    dispatch(getCreatorUsers(nums));
   }, [num]);
 
-  console.log(data2);
+  // console.log(data2);
 
   return (
     <>

@@ -39,6 +39,10 @@ const Login = () => {
 
   const { user, isError, isSuccess, isLoading, message } = authState.auth;
   const token = user?.data?.token;
+
+  // reload page because of token error
+
+  // reload page because of token error
   useEffect(() => {
     if (token) {
       history.push("/");

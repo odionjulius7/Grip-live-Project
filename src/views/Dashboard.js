@@ -29,8 +29,15 @@ import { getUsersAggregate } from "features/Users/usersSlice";
 import moment from "moment";
 import { getApprovePosts } from "features/Post/postSlice";
 import { getMonthlyUsers } from "features/Users/usersSlice";
+import DailyPosts from "Charts/DailyPosts";
 
 function Dashboard() {
+  // user token
+  //
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // user token
   const dispatch = useDispatch();
   const postState = useSelector((state) => state.post);
   const usersState = useSelector((state) => state.users);
@@ -39,11 +46,12 @@ function Dashboard() {
   const { deletedPost, isSuccessDel, isSuccessStatus } = postState;
   const posts = postState?.posts;
   useEffect(() => {
+    const nums = { token };
+    const items = { item: "false", token };
     dispatch(resetState()); // at first render alway clear the state(like loading, success etc)
-    dispatch(getUsers());
-
-    // dispatch(getApprovePosts());
-  }, [deletedPost]);
+    dispatch(getUsers(nums));
+    dispatch(getApprovePosts(items));
+  }, []);
 
   // Users
 
@@ -55,8 +63,7 @@ function Dashboard() {
 
   useEffect(() => {
     dispatch(resetState());
-    dispatch(getUsersAggregate());
-    dispatch(getApprovePosts("false"));
+    dispatch(getUsersAggregate(token));
   }, []);
 
   return (
@@ -75,7 +82,7 @@ function Dashboard() {
                   <Col xs="7">
                     <div className="numbers">
                       <p className="card-category">Content waiting approval</p>
-                      <Card.Title as="h4">15</Card.Title>
+                      <Card.Title as="h4">{posts?.length}</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -207,7 +214,7 @@ function Dashboard() {
           </Col>
         </Row>
         <Row>
-          <Col md="10">
+          <Col md="8">
             <Card>
               <Card.Header>
                 <Card.Title as="h4">Monthly Posts</Card.Title>
@@ -216,6 +223,19 @@ function Dashboard() {
               <Card.Body>
                 <div className="ct-chart" id="chartHours">
                   <MonthlyPosts />
+                </div>
+              </Card.Body>
+              <Card.Footer></Card.Footer>
+            </Card>
+          </Col>
+          <Col md="4">
+            <Card>
+              <Card.Header>
+                <Card.Title as="h4"> Daily Posts</Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <div className="ct-chart" id="chartHours">
+                  <DailyPosts />
                 </div>
               </Card.Body>
               <Card.Footer></Card.Footer>

@@ -20,6 +20,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 function SuspendedAcct() {
+  // user token
+  //
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // user token
+
   const [num, setNum] = useState(1);
   const dispatch = useDispatch();
   const usersState = useSelector((state) => state.users);
@@ -33,8 +40,9 @@ function SuspendedAcct() {
 
   // fetch users
   useEffect(() => {
+    const nums = { num, token };
     dispatch(resetState());
-    dispatch(getSuspUsers(num));
+    dispatch(getSuspUsers(nums));
   }, [num]);
   return (
     <>
