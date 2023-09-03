@@ -14,57 +14,43 @@ import {
 
 const data = [
   {
-    name: "Mon",
-    uv: 4000,
-  },
-  {
-    name: "Tue",
-    uv: 3000,
-  },
-  {
-    name: "Wed",
-    uv: 2000,
-  },
-  {
-    name: "Thu",
-    uv: 2780,
-  },
-  {
-    name: "Fri",
-    uv: 1890,
-  },
-  {
-    name: "Sat",
-    uv: 2390,
-  },
-  {
     name: "Sun",
-    uv: 3490,
+    value: 3490,
   },
 ];
 
 const DailyPosts = () => {
   // user token
 
-  // const userDataToken = useSelector((state) => state.auth.user);
-  // const token = userDataToken?.data?.token;
-  // //
-  // // user token
-  // const dispatch = useDispatch();
-  // const postState = useSelector((state) => state.post);
-  // let dailyUsers = postState?.dailyPosts;
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // user token
+  const dispatch = useDispatch();
+  const postState = useSelector((state) => state.post);
+  let dailyPosts = postState?.dailyPosts;
 
-  // useEffect(() => {
-  //   dispatch(getDailyPosts(token));
-  // }, []);
+  useEffect(() => {
+    dispatch(getDailyPosts(token));
+  }, []);
 
-  // const dailyP = [];
+  const dailyP = [];
+  if (dailyPosts) {
+    dailyPosts?.forEach((key) => {
+      dailyP.push({
+        name: moment(key?.date).format("dddd").slice(0, 3),
+        value: key?.postCount,
+      });
+    });
+  }
+
+  // console.log(dailyP);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart
         width={300}
         height={400}
-        data={data}
+        data={dailyP}
         margin={{
           top: 10,
           right: 30,
@@ -76,7 +62,7 @@ const DailyPosts = () => {
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
-        <Area type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8" />
+        <Area type="monotone" dataKey="value" stroke="#8884d8" fill="#8884d8" />
       </AreaChart>
     </ResponsiveContainer>
   );

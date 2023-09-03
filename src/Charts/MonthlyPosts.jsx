@@ -36,28 +36,28 @@ function MonthlyPosts() {
   //
   // user token
   const dispatch = useDispatch();
-  // const postState = useSelector((state) => state.post);
-  // const { monthlyPosts } = postState;
+  const postState = useSelector((state) => state.post);
+  const { monthlyPosts } = postState;
 
-  // useEffect(() => {
-  //   dispatch(getMonthlyPost(token));
-  // }, []);
+  useEffect(() => {
+    dispatch(getMonthlyPost(token));
+  }, []);
 
-  // let monthly = [];
+  let monthly = [];
 
-  // if (monthlyPosts) {
-  //   monthlyPosts?.forEach((key) => {
-  //     monthly.push({
-  //       name: key?.month.slice(0, 3),
-  //       value: key?.postCount,
-  //     });
-  //   });
-  // }
+  if (monthlyPosts) {
+    monthlyPosts?.forEach((key) => {
+      monthly.push({
+        name: key?.month.slice(0, 3),
+        value: key?.postCount,
+      });
+    });
+  }
 
-  // console.log(monthly);
+  console.log(monthly);
 
   return (
-    <BarChart width={650} height={320} data={data}>
+    <BarChart width={650} height={320} data={monthly}>
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="name" />
       <YAxis />

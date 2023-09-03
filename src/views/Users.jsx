@@ -96,6 +96,28 @@ const Users = () => {
 
   const usersAggregate = data3 ? data3 : data2;
 
+  // Create a useEffect to watch for changes in the 'name' state while searching for Users by name
+  // useEffect(() => {
+  //   let timer;
+  //   // Define a delay (e.g., 2000 milliseconds = 2 seconds)
+  //   const delay = 2000;
+  //   // Check if the 'name' has a value and it's not empty
+  //   if (name.trim() !== "") {
+  //     // Clear the existing timer, if any
+  //     clearTimeout(timer);
+  //     // Start a new timer to fetch data after the delay
+  //     timer = setTimeout(() => {
+  //       // Dispatch the action to fetch data using the 'name'
+  //       dispatch(getPosts(name));
+  //     }, delay);
+  //   }
+
+  //   // Clean up the timer if the component unmounts or 'name' changes
+  //   return () => {
+  //     clearTimeout(timer);
+  //   };
+  // }, [name, dispatch]);
+
   return (
     <>
       <Container fluid>

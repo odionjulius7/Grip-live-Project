@@ -108,7 +108,7 @@ export const unApprovePost = createAsyncThunk(
 
 // Graph   getMonthlyPost,
 export const getMonthlyPost = createAsyncThunk(
-  "users/get-monthly-users",
+  "users/get-monthly-posts",
   async (token, thunkAPI) => {
     try {
       return await postService.getMonthlyPost(token);
@@ -119,7 +119,7 @@ export const getMonthlyPost = createAsyncThunk(
 );
 
 export const getDailyPosts = createAsyncThunk(
-  "users/get-daily-users",
+  "users/get-daily-posts",
   async (token, thunkAPI) => {
     try {
       return await postService.getDailyPosts(token);

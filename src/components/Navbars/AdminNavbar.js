@@ -57,9 +57,8 @@ function Header() {
 
   // Log out
 
-  const clearTokenFromLocalStorage = () => {
-    localStorage.removeItem("grip"); // Remove the token from localStorage
-  };
+  // const clearTokenFromLocalStorage = () => {
+  //   localStorage.removeItem("grip"); }
 
   // const handleLogout = () => {
   //   // Clear the token from localStorage
@@ -69,9 +68,7 @@ function Header() {
   //     history.push("/login");
   //   }, 3000); // 3000 milliseconds (3 seconds)
   // };
-  useEffect(() => {
-    console.log(token);
-  }, [token]);
+
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
