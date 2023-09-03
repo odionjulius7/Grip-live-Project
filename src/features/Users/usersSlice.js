@@ -99,11 +99,24 @@ export const getAUser = createAsyncThunk(
     }
   }
 );
+
+// suspendAUser
 export const suspendAUser = createAsyncThunk(
   "user/suspend-a-user",
   async (ids, thunkAPI) => {
     try {
       return await usersService.suspendAUser(ids);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+// UnsuspendAUser
+export const UnsuspendAUser = createAsyncThunk(
+  "user/Unsuspend-a-user",
+  async (ids, thunkAPI) => {
+    try {
+      return await usersService.UnsuspendAUser(ids);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -181,7 +194,7 @@ export const usersSlice = createSlice({
         state.message = action.error;
         state.isLoading = false;
       })
-      // Get Susp. Users
+      //  Susp. A User
       .addCase(suspendAUser.pending, (state) => {
         state.isLoading = true;
       })
@@ -193,6 +206,23 @@ export const usersSlice = createSlice({
         state.message = "success";
       })
       .addCase(suspendAUser.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      //  Unsusp. A User
+      .addCase(UnsuspendAUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(UnsuspendAUser.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.unSuspendAU = action.payload;
+        state.message = "success";
+      })
+      .addCase(UnsuspendAUser.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;

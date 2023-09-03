@@ -45,7 +45,7 @@ const data = [
 
 const DailyPosts = () => {
   // user token
-  //
+
   // const userDataToken = useSelector((state) => state.auth.user);
   // const token = userDataToken?.data?.token;
   // //
@@ -59,16 +59,6 @@ const DailyPosts = () => {
   // }, []);
 
   // const dailyP = [];
-  // if (dailyUsers) {
-  //   dailyUsers?.forEach((key) => {
-  //     dailyP.push({
-  //       name: moment(key?.date).format("dddd").slice(0, 3),
-  //       value: key?.postCount,
-  //     });
-  //   });
-  // }
-
-  // console.log(dailyP);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart

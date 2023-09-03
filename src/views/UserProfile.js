@@ -11,6 +11,9 @@ import { resetState } from "features/Users/usersSlice";
 import { getAUser } from "features/Users/usersSlice";
 import { getAUserPosts } from "features/Post/postSlice";
 import { suspendAUser } from "features/Users/usersSlice";
+import { UnsuspendAUser } from "features/Users/usersSlice";
+
+import SVG from "../assets/img/SVGImg.png";
 
 function User() {
   //
@@ -28,8 +31,15 @@ function User() {
   const userState = useSelector((state) => state.users);
   const auserPostsState = useSelector((state) => state.post);
 
-  const { isSuccess, isError, isLoading, user, updatedRole, suspendAU } =
-    userState;
+  const {
+    isSuccess,
+    isError,
+    isLoading,
+    user,
+    updatedRole,
+    suspendAU,
+    unSuspendAU,
+  } = userState;
   const { aUserPosts } = auserPostsState;
 
   useEffect(() => {
@@ -53,7 +63,7 @@ function User() {
     const ids = { id, token };
     dispatch(resetState());
     dispatch(getAUser(ids));
-  }, [id, updatedRole]);
+  }, [id, updatedRole, suspendAU, unSuspendAU]);
 
   useEffect(() => {
     const ids = { id, token };
@@ -228,7 +238,7 @@ function User() {
                     <img
                       alt="..."
                       className="avatar border-gray"
-                      src={require("assets/img/faces/face-3.jpg")}
+                      src={require("assets/img/default-avatar.png")}
                     ></img>
                     <h5 className="title">{user?.username}</h5>
                   </a>
@@ -286,7 +296,7 @@ function User() {
                     // href="#"
                     onClick={() => {
                       const ids = { id, token };
-                      // dispatch(suspendAUser(ids));
+                      dispatch(UnsuspendAUser(ids));
                     }}
                     variant="warning"
                   >

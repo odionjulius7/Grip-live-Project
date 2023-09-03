@@ -15,14 +15,23 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
 
 import routes from "routes.js";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "features/auth/authSlice";
 
 function Header() {
+  // user token
+  //
+  const userDataToken = useSelector((state) => state.auth.user);
+  const token = userDataToken?.data?.token;
+  //
+  // user token
+  const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
   const mobileSidebarToggle = (e) => {
@@ -45,6 +54,24 @@ function Header() {
     }
     return "Details";
   };
+
+  // Log out
+
+  const clearTokenFromLocalStorage = () => {
+    localStorage.removeItem("grip"); // Remove the token from localStorage
+  };
+
+  // const handleLogout = () => {
+  //   // Clear the token from localStorage
+  //   clearTokenFromLocalStorage();
+
+  //   setTimeout(() => {
+  //     history.push("/login");
+  //   }, 3000); // 3000 milliseconds (3 seconds)
+  // };
+  useEffect(() => {
+    console.log(token);
+  }, [token]);
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
@@ -179,7 +206,10 @@ function Header() {
               <Nav.Link
                 className="m-0"
                 href="#pablo"
-                onClick={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  dispatch(logout());
+                }}
               >
                 <span className="no-icon">Log out</span>
               </Nav.Link>

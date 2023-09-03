@@ -65,7 +65,7 @@ function Posts() {
   };
 
   const setPostStatus = (e) => {
-    console.log(e);
+    // console.log(e);
     const item = e;
     const items = { item, token };
     dispatch(getApprovePosts(items));

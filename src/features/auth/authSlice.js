@@ -27,10 +27,28 @@ export const login = createAsyncThunk(
   }
 );
 
+// Create an async thunk for logout
+export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
+  // Clear the user data from state
+  thunkAPI.dispatch(authSlice.actions.clearUser());
+
+  // Clear the user data from localStorage (if needed)
+  localStorage.removeItem("grip");
+
+  // You can also add any other logout-related logic here
+
+  return null; // Return null as there's no specific data needed for logout
+});
+
 export const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    // Add a reducer to clear the user data
+    clearUser: (state) => {
+      state.user = null; // Set the user to null or empty on logout
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Login

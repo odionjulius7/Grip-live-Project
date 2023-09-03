@@ -82,7 +82,7 @@ const Users = () => {
     dispatch(getUsersByTopics(items));
   };
 
-  console.log(usersTopics);
+  // console.log(usersTopics);
 
   useEffect(() => {
     const nums = { num, token };

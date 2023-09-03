@@ -46,15 +46,36 @@ const getAUser = async (ids) => {
 
   return response.data?.data;
 };
-const suspendAUser = async (ids) => {
-  console.log(ids.token);
-  const config = generateAxiosConfig(ids.token);
-  const response = await axios.patch(
-    `${base_url}user/suspend/${ids.id}`,
-    config
-  );
 
-  return response.data?.data;
+const suspendAUser = async (ids) => {
+  const config = generateAxiosConfig(ids.token);
+  try {
+    const response = await axios.patch(
+      `${base_url}user/suspend/${ids.id}`,
+      null,
+      config
+    );
+    return response.data?.data;
+  } catch (error) {
+    console.log(error);
+    // Handle the error as needed
+    return null;
+  }
+};
+const UnsuspendAUser = async (ids) => {
+  const config = generateAxiosConfig(ids.token);
+  try {
+    const response = await axios.patch(
+      `${base_url}user/unsuspend/${ids.id}`,
+      null,
+      config
+    );
+    return response.data?.data;
+  } catch (error) {
+    console.log(error);
+    // Handle the error as needed
+    return null;
+  }
 };
 
 const getMonthlyUsers = async (token) => {
@@ -105,6 +126,7 @@ const usersService = {
   getDailyUsers,
   getUsersByTopics,
   suspendAUser,
+  UnsuspendAUser,
 };
 
 export default usersService;
