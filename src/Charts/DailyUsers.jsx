@@ -10,6 +10,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ResponsiveContainer,
 } from "recharts";
 
 // const data = [
@@ -50,14 +51,16 @@ function DailyUsers() {
   // console.log(dailyU);
   // console.log(dailyUsers);
   return (
-    <BarChart width={300} height={320} data={dailyU}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Bar dataKey="value" fill="#8884d8" />
-    </BarChart>
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart width={"100%"} height={320} data={dailyU}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        {/* <Legend /> */}
+        <Bar dataKey="value" fill="#8884d8" />
+      </BarChart>
+    </ResponsiveContainer>
   );
 }
 

@@ -12,6 +12,18 @@ const login = async (user) => {
   return response.data;
 };
 
+const changePassword = async (user) => {
+  const { token, oldPassword, newPassword } = user;
+  const config = generateAxiosConfig(token);
+  const response = await axios.post(
+    `${base_url}user/password`,
+    { oldPassword, newPassword },
+    config
+  );
+
+  return response.data;
+};
+
 const getUsers = async (token) => {
   const config = generateAxiosConfig(token);
   const response = await axios.get(`${base_url}user/all`, config);
@@ -22,6 +34,7 @@ const getUsers = async (token) => {
 const authService = {
   login,
   getUsers,
+  changePassword,
 };
 
 export default authService;

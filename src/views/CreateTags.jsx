@@ -40,6 +40,10 @@ function CreateTags() {
       // pass the value of the data got from formik to the login action
       dispatch(createTag(items));
       dispatch(resetState());
+
+      // After successful submission, clear the form inputs manually
+
+      formik.setFieldValue("name", "");
     },
   });
   // console.log(createdCategory);
@@ -74,7 +78,7 @@ function CreateTags() {
                     val={formik.values.name}
                   />
                   <div className="error mt-2">
-                    {formik.touched.name && formik.errors.name}
+                    {/* {formik.touched.name && formik.errors.name} */}
                   </div>
 
                   <button

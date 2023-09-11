@@ -22,6 +22,28 @@ export const getUsers = createAsyncThunk(
     }
   }
 );
+//
+export const searchUserByName = createAsyncThunk(
+  "users/search-users",
+  async (nums, thunkAPI) => {
+    try {
+      return await usersService.searchUserByName(nums);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+//
+export const searchCreatorsByName = createAsyncThunk(
+  "users/search-creators",
+  async (nums, thunkAPI) => {
+    try {
+      return await usersService.searchCreatorsByName(nums);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 export const getUsersByTopics = createAsyncThunk(
   "users/get-users-by-topics",
@@ -162,6 +184,23 @@ export const usersSlice = createSlice({
         state.message = action.error;
         state.isLoading = false;
       })
+      // search Users By Name
+      .addCase(searchUserByName.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(searchUserByName.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.users = action.payload;
+        state.message = "success";
+      })
+      .addCase(searchUserByName.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
       // Get User By Topics
       .addCase(getUsersByTopics.pending, (state) => {
         state.isLoading = true;
@@ -240,6 +279,23 @@ export const usersSlice = createSlice({
         state.message = "success";
       })
       .addCase(getCreatorUsers.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      // search Creators By Name
+      .addCase(searchCreatorsByName.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(searchCreatorsByName.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.creators = action.payload;
+        state.message = "success";
+      })
+      .addCase(searchCreatorsByName.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;

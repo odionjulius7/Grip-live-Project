@@ -1,5 +1,6 @@
 import CustomModal from "components/CustomModal";
 import { getUsers } from "features/Users/usersSlice";
+import { searchUserByName } from "features/Users/usersSlice";
 import { getUsersByTopics } from "features/Users/usersSlice";
 import { changeUserRole } from "features/Users/usersSlice";
 import { resetState } from "features/Users/usersSlice";
@@ -27,6 +28,7 @@ import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { toast } from "react-toastify";
 
 const Users = () => {
+  const [username, setUsername] = useState("");
   // user token
   //
   const categoryState = useSelector((state) => state.category.category);
@@ -82,8 +84,6 @@ const Users = () => {
     dispatch(getUsersByTopics(items));
   };
 
-  // console.log(usersTopics);
-
   useEffect(() => {
     const nums = { num, token };
     dispatch(resetState());
@@ -97,31 +97,49 @@ const Users = () => {
   const usersAggregate = data3 ? data3 : data2;
 
   // Create a useEffect to watch for changes in the 'name' state while searching for Users by name
-  // useEffect(() => {
-  //   let timer;
-  //   // Define a delay (e.g., 2000 milliseconds = 2 seconds)
-  //   const delay = 2000;
-  //   // Check if the 'name' has a value and it's not empty
-  //   if (name.trim() !== "") {
-  //     // Clear the existing timer, if any
-  //     clearTimeout(timer);
-  //     // Start a new timer to fetch data after the delay
-  //     timer = setTimeout(() => {
-  //       // Dispatch the action to fetch data using the 'name'
-  //       dispatch(getPosts(name));
-  //     }, delay);
-  //   }
+  useEffect(() => {
+    let timer;
+    // Define a delay (e.g., 2000 milliseconds = 2 seconds)
+    const delay = 2000;
+    // Check if the 'name' has a value and it's not empty
+    if (username.trim() !== "") {
+      // Clear the existing timer, if any
+      clearTimeout(timer);
+      // Start a new timer to fetch data after the delay
+      timer = setTimeout(() => {
+        // Dispatch the action to fetch data using the 'name'
+        const nums = { username, token };
+        dispatch(searchUserByName(nums));
+      }, delay);
+    }
 
-  //   // Clean up the timer if the component unmounts or 'name' changes
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, [name, dispatch]);
+    // Clean up the timer if the component unmounts or 'name' changes
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [username, dispatch]);
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value); // Update the username state with the input value
+    // console.log(e.target.value);
+  };
 
   return (
     <>
       <Container fluid>
         <Row>
+          <div
+            style={{ width: "97%" }}
+            className="d-flex justify-content-end my-2"
+          >
+            <Form.Group style={{ width: "25%" }}>
+              <Form.Control
+                placeholder="Search user..."
+                type="text"
+                onChange={handleUsernameChange}
+              ></Form.Control>
+            </Form.Group>{" "}
+          </div>
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
               <Card.Header className="d-flex justify-content-between">

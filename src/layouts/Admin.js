@@ -24,7 +24,10 @@ import Sidebar from "components/Sidebar/Sidebar";
 
 import routes from "routes.js";
 
-import sidebarImage from "assets/img/sidebar-3.jpg";
+// import sidebarImage from "assets/img/sidebar-3.jpg";
+
+const sidebarImage =
+  "https://img.freepik.com/free-photo/lonely-african-american-male-praying-with-his-hands-bible-with-his-head-down_181624-19796.jpg";
 
 function Admin() {
   const [image, setImage] = React.useState(sidebarImage);

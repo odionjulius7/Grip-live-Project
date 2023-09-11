@@ -41,8 +41,6 @@ const Login = () => {
   const token = user?.data?.token;
 
   // reload page because of token error
-
-  // reload page because of token error
   useEffect(() => {
     if (token) {
       history.push("/");

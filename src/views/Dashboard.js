@@ -183,9 +183,37 @@ function Dashboard() {
             </Card>
           </Col>
         </Row>
+        <Row>
+          <Col md="6">
+            <Card>
+              <Card.Header>
+                <Card.Title as="h4"> Daily App Users</Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <div className="ct-chart" id="chartHours">
+                  <DailyUsers />
+                </div>
+              </Card.Body>
+              <Card.Footer></Card.Footer>
+            </Card>
+          </Col>
+          <Col md="6">
+            <Card>
+              <Card.Header>
+                <Card.Title as="h4"> Daily Posts</Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <div className="ct-chart" id="chartHours">
+                  <DailyPosts />
+                </div>
+              </Card.Body>
+              <Card.Footer></Card.Footer>
+            </Card>
+          </Col>
+        </Row>
 
         <Row>
-          <Col md="8">
+          <Col md="12">
             <Card>
               <Card.Header>
                 <Card.Title as="h4">Monthly App Users</Card.Title>
@@ -199,22 +227,9 @@ function Dashboard() {
               <Card.Footer></Card.Footer>
             </Card>
           </Col>
-          <Col md="4">
-            <Card>
-              <Card.Header>
-                <Card.Title as="h4"> Daily App Users</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                <div className="ct-chart" id="chartHours">
-                  <DailyUsers />
-                </div>
-              </Card.Body>
-              <Card.Footer></Card.Footer>
-            </Card>
-          </Col>
         </Row>
         <Row>
-          <Col md="8">
+          <Col md="12">
             <Card>
               <Card.Header>
                 <Card.Title as="h4">Monthly Posts</Card.Title>
@@ -223,19 +238,6 @@ function Dashboard() {
               <Card.Body>
                 <div className="ct-chart" id="chartHours">
                   <MonthlyPosts />
-                </div>
-              </Card.Body>
-              <Card.Footer></Card.Footer>
-            </Card>
-          </Col>
-          <Col md="4">
-            <Card>
-              <Card.Header>
-                <Card.Title as="h4"> Daily Posts</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                <div className="ct-chart" id="chartHours">
-                  <DailyPosts />
                 </div>
               </Card.Body>
               <Card.Footer></Card.Footer>

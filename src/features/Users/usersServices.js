@@ -12,6 +12,26 @@ const getUsers = async (nums) => {
   // console.log(config);
   return response.data;
 };
+// Search Users
+const searchUserByName = async (nums) => {
+  const config = generateAxiosConfig(nums.token);
+  const response = await axios.get(
+    `${base_url}user/all?username=${nums.username}&role=user`,
+    config
+  );
+  // console.log(config);
+  return response.data;
+};
+// Search Users
+const searchCreatorsByName = async (nums) => {
+  const config = generateAxiosConfig(nums.token);
+  const response = await axios.get(
+    `${base_url}user/all?username=${nums.username}&role=creator`,
+    config
+  );
+  // console.log(config);
+  return response.data;
+};
 
 const getSuspUsers = async (nums) => {
   const config = generateAxiosConfig(nums.token);
@@ -127,6 +147,8 @@ const usersService = {
   getUsersByTopics,
   suspendAUser,
   UnsuspendAUser,
+  searchUserByName,
+  searchCreatorsByName,
 };
 
 export default usersService;

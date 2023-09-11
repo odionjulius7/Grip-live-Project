@@ -48,7 +48,7 @@ const DailyPosts = () => {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart
-        width={300}
+        width={"100%"}
         height={400}
         data={dailyP}
         margin={{

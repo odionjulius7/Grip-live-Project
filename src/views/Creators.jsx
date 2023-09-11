@@ -1,4 +1,5 @@
 import { getUsers } from "features/Users/usersSlice";
+import { searchCreatorsByName } from "features/Users/usersSlice";
 import { getCreatorUsers } from "features/Users/usersSlice";
 import { resetState } from "features/Users/usersSlice";
 import moment from "moment/moment";
@@ -15,11 +16,13 @@ import {
   Container,
   Row,
   Col,
+  Form,
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 function Creators() {
+  const [username, setUsername] = useState("");
   // user token
   //
   const userDataToken = useSelector((state) => state.auth.user);
@@ -42,17 +45,55 @@ function Creators() {
 
   // console.log(data2);
 
+  // Create a useEffect to watch for changes in the 'name' state while searching for Users by name
+  useEffect(() => {
+    let timer;
+    // Define a delay (e.g., 2000 milliseconds = 2 seconds)
+    const delay = 2000;
+    // Check if the 'name' has a value and it's not empty
+    if (username.trim() !== "") {
+      // Clear the existing timer, if any
+      clearTimeout(timer);
+      // Start a new timer to fetch data after the delay
+      timer = setTimeout(() => {
+        // Dispatch the action to fetch data using the 'name'
+        const nums = { username, token };
+        dispatch(searchCreatorsByName(nums));
+      }, delay);
+    }
+
+    // Clean up the timer if the component unmounts or 'name' changes
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [username, dispatch]);
+
+  const handleCreatornameChange = (e) => {
+    setUsername(e.target.value); // Update the username state with the input value
+    console.log(e.target.value);
+  };
+
   return (
     <>
       <Container fluid>
         <Row>
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
-              <Card.Header>
+              <Card.Header className="d-flex justify-content-between">
                 <Card.Title as="h4">Creators' List</Card.Title>
-                <p className="card-category">
-                  Here is a subtitle for this table
-                </p>
+
+                <div
+                  style={{ width: "97%" }}
+                  className="d-flex justify-content-end my-2"
+                >
+                  <Form.Group style={{ width: "25%" }}>
+                    <Form.Control
+                      placeholder="Search Post..."
+                      type="text"
+                      onChange={handleCreatornameChange}
+                    ></Form.Control>
+                  </Form.Group>{" "}
+                </div>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <Table className="table-hover table-striped">

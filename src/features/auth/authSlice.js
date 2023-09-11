@@ -27,6 +27,18 @@ export const login = createAsyncThunk(
   }
 );
 
+export const changePassword = createAsyncThunk(
+  "auth/password",
+  async (userData, thunkAPI) => {
+    try {
+      return await authService.changePassword(userData);
+    } catch (error) {
+      toast.error("Failed, try again");
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 // Create an async thunk for logout
 export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   // Clear the user data from state
@@ -36,7 +48,6 @@ export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   localStorage.removeItem("grip");
 
   // You can also add any other logout-related logic here
-
   return null; // Return null as there's no specific data needed for logout
 });
 
@@ -63,6 +74,23 @@ export const authSlice = createSlice({
         state.message = "success";
       })
       .addCase(login.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      // Change Password
+      .addCase(changePassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.newCredentials = action.payload;
+        state.message = "success";
+      })
+      .addCase(changePassword.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
