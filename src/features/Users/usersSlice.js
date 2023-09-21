@@ -44,7 +44,7 @@ export const searchCreatorsByName = createAsyncThunk(
     }
   }
 );
-
+//
 export const getUsersByTopics = createAsyncThunk(
   "users/get-users-by-topics",
   async (items, thunkAPI) => {
@@ -55,7 +55,7 @@ export const getUsersByTopics = createAsyncThunk(
     }
   }
 );
-
+//
 export const getSuspUsers = createAsyncThunk(
   "users/get-suspended-users",
   async (nums, thunkAPI) => {
@@ -66,7 +66,7 @@ export const getSuspUsers = createAsyncThunk(
     }
   }
 );
-
+//
 export const getCreatorUsers = createAsyncThunk(
   "users/get-creator-users",
   async (nums, thunkAPI) => {
@@ -77,7 +77,7 @@ export const getCreatorUsers = createAsyncThunk(
     }
   }
 );
-
+//
 export const getMonthlyUsers = createAsyncThunk(
   "users/get-monthly-users",
   async (token, thunkAPI) => {
@@ -88,12 +88,23 @@ export const getMonthlyUsers = createAsyncThunk(
     }
   }
 );
-
+//
 export const getDailyUsers = createAsyncThunk(
   "users/get-daily-users",
   async (token, thunkAPI) => {
     try {
       return await usersService.getDailyUsers(token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+//
+export const getUserBookmarks = createAsyncThunk(
+  "users/get-user-bookmarks",
+  async (token, thunkAPI) => {
+    try {
+      return await usersService.getUserBookmarks(token);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -379,6 +390,23 @@ export const usersSlice = createSlice({
         state.message = "success";
       })
       .addCase(changeUserRole.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccessRole = false;
+        state.message = action.error;
+        state.isLoading = false;
+      })
+      // Change User Role
+      .addCase(getUserBookmarks.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUserBookmarks.fulfilled, (state, action) => {
+        state.isError = false;
+        state.isLoading = false;
+        state.isSuccessRole = true;
+        state.userBookmarks = action.payload;
+        state.message = "success";
+      })
+      .addCase(getUserBookmarks.rejected, (state, action) => {
         state.isError = true;
         state.isSuccessRole = false;
         state.message = action.error;

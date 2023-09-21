@@ -28,15 +28,25 @@ const getAPost = async (ids) => {
   // console.log(response);
   return response.data?.data;
 };
+//
 const getAUserPosts = async (ids) => {
   const config = generateAxiosConfig(ids.token);
   const response = await axios.get(
     `${base_url}post/admin?status=false&deleted=false&userId=${ids.id}`,
     config
   );
-  // console.log(response);
-  return response.data?.data;
+  return response?.data?.data;
 };
+//
+const getPostsCommented = async (ids) => {
+  const config = generateAxiosConfig(ids.token);
+  const response = await axios.get(
+    `${base_url}post/commented?id=${ids.id}`,
+    config
+  );
+  return response?.data?.data;
+};
+//
 const getAPostComments = async (ids) => {
   const config = generateAxiosConfig(ids.token);
   const response = await axios.get(
@@ -46,26 +56,26 @@ const getAPostComments = async (ids) => {
   // console.log(response);
   return response.data?.data;
 };
-
+//
 const deletePostComment = async (ids) => {
   const config = generateAxiosConfig(ids.token);
   const response = await axios.delete(`${base_url}comment/${ids.id}`, config);
   // console.log(response);
   return response.data;
 };
-
+//
 const approvePost = async (ids) => {
   const config = generateAxiosConfig(ids.token);
   const response = await axios.patch(
     `${base_url}post/approve`,
     {
-      id: id,
+      id: ids?.id,
     },
     config
   );
-  // console.log(response);
   return response.data;
 };
+//
 const unApprovePost = async (ids) => {
   const id = ids.id;
   const config = generateAxiosConfig(ids.token);
@@ -76,17 +86,15 @@ const unApprovePost = async (ids) => {
     },
     config
   );
-  // console.log(response);
   return response.data;
 };
-
+//
 const deletePost = async (ids) => {
   const config = generateAxiosConfig(ids.token);
   const response = await axios.delete(
     `${base_url}post/${ids.id}/admin`,
     config
   );
-  // console.log(response);
   return response.data;
 };
 
@@ -97,14 +105,14 @@ const getMonthlyPost = async (token) => {
 
   return response.data?.data;
 };
-
+//
 const getDailyPosts = async (token) => {
   const config = generateAxiosConfig(token);
   const response = await axios.get(`${base_url}post/daily`, config);
 
   return response.data?.data;
 };
-
+//
 const postService = {
   deletePostComment,
   getAPost,
@@ -118,6 +126,7 @@ const postService = {
   unApprovePost,
   getMonthlyPost,
   getDailyPosts,
+  getPostsCommented,
 };
 
 export default postService;

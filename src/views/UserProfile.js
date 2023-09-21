@@ -14,6 +14,8 @@ import { suspendAUser } from "features/Users/usersSlice";
 import { UnsuspendAUser } from "features/Users/usersSlice";
 
 import SVG from "../assets/img/SVGImg.png";
+import { getUserBookmarks } from "features/Users/usersSlice";
+import { getPostsCommented } from "features/Post/postSlice";
 
 function User() {
   //
@@ -39,17 +41,20 @@ function User() {
     updatedRole,
     suspendAU,
     unSuspendAU,
+    userBookmarks,
   } = userState;
-  const { aUserPosts } = auserPostsState;
+  const { postsCommentedOn, aUserPosts } = auserPostsState;
+  // logged user commented posts
+  console.log(postsCommentedOn);
 
   useEffect(() => {
-    if (isSuccess && updatedRole) {
+    if (updatedRole) {
       toast.success("Role Updated Successfully!");
     }
     if (isError) {
       toast.error("Something Went Wrong!");
     }
-  }, [isSuccess, isError, updatedRole]);
+  }, [isError, updatedRole]);
   useEffect(() => {
     if (isSuccess && suspendAU) {
       toast.success("Creator Suspended!");
@@ -67,11 +72,12 @@ function User() {
 
   useEffect(() => {
     const ids = { id, token };
-    // dispatch(resetState());
+    dispatch(getPostsCommented(ids));
+    dispatch(getUserBookmarks(token));
     dispatch(getAUserPosts(ids));
   }, [id]);
 
-  console.log(suspendAU);
+  const bookmarks = userBookmarks?.filter((item) => item.userId == id);
 
   return (
     <>
@@ -167,14 +173,12 @@ function User() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>Niger</td>
-                          <td>Dakota Rice</td>
-                        </tr>
-                        <tr>
-                          <td>Niger</td>
-                          <td>Dakota Rice</td>
-                        </tr>
+                        {bookmarks?.map((item, i) => (
+                          <tr key={i}>
+                            <td>{item?.post?.title}</td>
+                            <td>{moment(item?.createdAt).format("L")}</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </Table>
                   </Card.Body>
@@ -189,9 +193,7 @@ function User() {
                 <Card className="strpied-tabled-with-hover">
                   <Card.Header className="d-flex justify-content-between">
                     <div>
-                      <Card.Title as="h4">
-                        List of Posts Commented on
-                      </Card.Title>
+                      <Card.Title as="h4">Creator's Posts</Card.Title>
                     </div>
                   </Card.Header>
                   <Card.Body className="table-full-width table-responsive px-0">

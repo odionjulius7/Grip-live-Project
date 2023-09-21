@@ -112,6 +112,13 @@ const getDailyUsers = async (token) => {
   return response.data?.data;
 };
 
+const getUserBookmarks = async (token) => {
+  const config = generateAxiosConfig(token);
+  const response = await axios.get(`${base_url}bookmark/admin`, config);
+
+  return response.data?.data;
+};
+
 const changeUserRole = async (ids) => {
   const config = generateAxiosConfig(ids.token);
   const response = await axios.post(
@@ -149,6 +156,7 @@ const usersService = {
   UnsuspendAUser,
   searchUserByName,
   searchCreatorsByName,
+  getUserBookmarks,
 };
 
 export default usersService;

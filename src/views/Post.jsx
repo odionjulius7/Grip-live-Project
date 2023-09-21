@@ -1,26 +1,18 @@
-import { getAPost } from "features/Post/postSlice";
 import { resetState } from "features/Users/usersSlice";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
-import {
-  Badge,
-  Button,
-  Card,
-  Navbar,
-  Nav,
-  Container,
-  Row,
-  Col,
-  Table,
-} from "react-bootstrap";
+import { Button, Card, Container, Row, Col, Table } from "react-bootstrap";
 import { toast } from "react-toastify";
 import ReactPlayer from "react-player";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import moment from "moment";
-import { getAPostComments } from "features/Post/postSlice";
-import { approvePost } from "features/Post/postSlice";
+import {
+  getAPostComments,
+  approvePost,
+  getAPost,
+} from "features/Post/postSlice";
 
 function Post() {
   // user token
@@ -117,7 +109,10 @@ function Post() {
                     <button
                       type="button"
                       className="btn btn-primary ml-2"
-                      onClick={() => dispatch(approvePost(id))}
+                      onClick={() => {
+                        const ids = { id, token };
+                        dispatch(approvePost(ids));
+                      }}
                     >
                       &nbsp;{isLoading ? "loading..." : "Approve Post"}
                     </button>

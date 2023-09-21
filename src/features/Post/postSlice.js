@@ -85,7 +85,7 @@ export const deletePost = createAsyncThunk(
 );
 
 export const approvePost = createAsyncThunk(
-  "post/approve-post",
+  "post/approve-post-1",
   async (ids, thunkAPI) => {
     try {
       return await postService.approvePost(ids);
@@ -117,7 +117,7 @@ export const getMonthlyPost = createAsyncThunk(
     }
   }
 );
-
+//
 export const getDailyPosts = createAsyncThunk(
   "users/get-daily-posts",
   async (token, thunkAPI) => {
@@ -128,9 +128,20 @@ export const getDailyPosts = createAsyncThunk(
     }
   }
 );
-
+//
+export const getPostsCommented = createAsyncThunk(
+  "post/get-user-commented-posts",
+  async (token, thunkAPI) => {
+    try {
+      return await postService.getPostsCommented(token);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+//
 export const resetState = createAction("Reset_all");
-
+//
 export const postSlice = createSlice({
   name: "post",
   initialState: initialState,
@@ -226,8 +237,6 @@ export const postSlice = createSlice({
         state.isSuccess = false;
       })
       .addCase(getAPostComments.fulfilled, (state, action) => {
-        // state.isError = false;
-        // state.isLoading = false;
         state.isSuccess = true;
         state.aPostComments = action.payload;
         state.message = "success";
@@ -318,6 +327,23 @@ export const postSlice = createSlice({
         state.message = "success";
       })
       .addCase(deletePostComment.rejected, (state, action) => {
+        // state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        state.isLoading1 = false;
+      })
+      // Get User Commented Posts
+      .addCase(getPostsCommented.pending, (state) => {
+        state.isLoading1 = true;
+      })
+      .addCase(getPostsCommented.fulfilled, (state, action) => {
+        // state.isError = false;
+        state.isLoading1 = false;
+        state.isSuccess = true;
+        state.postsCommentedOn = action.payload;
+        state.message = "success";
+      })
+      .addCase(getPostsCommented.rejected, (state, action) => {
         // state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
