@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import moment from "moment";
 // react-bootstrap components
-import { Button, Card, Container, Row, Col, Table } from "react-bootstrap";
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { Button, Card, Container, Row, Col, Table, Nav } from "react-bootstrap";
+import { Link, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { changeUserRole } from "features/Users/usersSlice";
@@ -45,7 +45,7 @@ function User() {
   } = userState;
   const { postsCommentedOn, aUserPosts } = auserPostsState;
   // logged user commented posts
-  console.log(postsCommentedOn);
+  // console.log(postsCommentedOn);
 
   useEffect(() => {
     if (updatedRole) {
@@ -79,114 +79,56 @@ function User() {
 
   const bookmarks = userBookmarks?.filter((item) => item.userId == id);
 
+  const [eventKey, setEventKey] = useState("link-0");
+  console.log(eventKey);
   return (
     <>
       <Container fluid>
-        <Row>
-          {user?.role === "user" && (
-            <Col md="8">
-              <Row>
-                <Card className="strpied-tabled-with-hover">
-                  <Card.Header className="d-flex justify-content-between">
-                    <div>
-                      <Card.Title as="h4">
-                        List of Posts Commented on
-                      </Card.Title>
-                    </div>
-                  </Card.Header>
-                  <Card.Body className="table-full-width table-responsive px-0">
-                    <Table className="table-hover table-striped">
-                      <thead>
-                        <tr>
-                          <th className="border-0">Title</th>
-                          <th className="border-0">Author</th>
-                          <th className="border-0">comment</th>
-                          <th className="border-0">Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Niger</td>
-                          <td>Dakota Rice</td>
-                          <td>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Maxime mollitia, molestiae quas vel sint
-                            commodi repudiandae consequuntur voluptatum laborum
-                            numquam
-                          </td>
-                          <td>Dakota Rice</td>
-                        </tr>
-                        <tr>
-                          <td>Niger</td>
-                          <td>Dakota Rice</td>
-                          <td>Dakota Rice</td>
-                          <td>Dakota Rice</td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </Card.Body>
-                </Card>
-              </Row>
-              <Row>
-                <Card className="strpied-tabled-with-hover mr-3">
-                  <Card.Header className="d-flex justify-content-between">
-                    <div>
-                      <Card.Title as="h4">All Liked Posts</Card.Title>
-                    </div>
-                  </Card.Header>
-                  <Card.Body className="table-full-width table-responsive px-0">
-                    <Table className="table-hover table-striped">
-                      <thead>
-                        <tr>
-                          <th className="border-0">Title</th>
-                          <th className="border-0">Author</th>
-                          <th className="border-0">Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Niger</td>
-                          <td>Dakota Rice</td>
-                          <td>Dakota Rice</td>
-                        </tr>
-                        <tr>
-                          <td>Niger</td>
-                          <td>Dakota Rice</td>
-                          <td>Dakota Rice</td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </Card.Body>
-                </Card>
-                <Card className="strpied-tabled-with-hover">
-                  <Card.Header className="d-flex justify-content-between">
-                    <div>
-                      <Card.Title as="h4">List of bookmarks</Card.Title>
-                    </div>
-                  </Card.Header>
-                  <Card.Body className="table-full-width table-responsive px-0">
-                    <Table className="table-hover table-striped">
-                      <thead>
-                        <tr>
-                          <th className="border-0">Title</th>
-                          <th className="border-0">Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {bookmarks?.map((item, i) => (
-                          <tr key={i}>
-                            <td>{item?.post?.title}</td>
-                            <td>{moment(item?.createdAt).format("L")}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  </Card.Body>
-                </Card>
-              </Row>
-            </Col>
-          )}
+        {/* Tab starts here */}
 
+        {user?.role === "user" && (
+          <Nav className="my-4" fill variant="tabs">
+            <Nav.Item>
+              <Nav.Link
+                eventKey={"link-0"}
+                onClick={() => setEventKey("link-0")}
+                style={{
+                  backgroundColor: eventKey === "link-0" ? "#007bff" : "",
+                  color: eventKey === "link-0" ? "#fff" : "",
+                }}
+              >
+                Profile
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                eventKey={"link-1"}
+                onClick={() => setEventKey("link-1")}
+                style={{
+                  backgroundColor: eventKey === "link-1" ? "#007bff" : "",
+                  color: eventKey === "link-1" ? "#fff" : "",
+                }}
+              >
+                Liked Posts
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                eventKey={"link-2"}
+                onClick={() => setEventKey("link-2")}
+                style={{
+                  backgroundColor: eventKey === "link-2" ? "#007bff" : "",
+                  color: eventKey === "link-2" ? "#fff" : "",
+                }}
+              >
+                Bookmarks
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+        )}
+
+        {/* Tab ends here */}
+        <Row className="px-3">
           {user?.role === "creator" && (
             <Col md="8">
               <Row>
@@ -226,89 +168,89 @@ function User() {
               </Row>
             </Col>
           )}
-          <Col md="4">
-            <Card className="card-user">
-              <div className="card-image">
-                <img
-                  alt="..."
-                  src={require("assets/img/photo-1431578500526-4d9613015464.jpeg")}
-                ></img>
-              </div>
-              <Card.Body>
-                <div className="author">
-                  <a href="#" onClick={(e) => e.preventDefault()}>
-                    <img
-                      alt="..."
-                      className="avatar border-gray"
-                      src={require("assets/img/default-avatar.png")}
-                    ></img>
-                    <h5 className="title">{user?.username}</h5>
-                  </a>
-                  <p className="description">Email: {user?.email}</p>
-                  <p className="description">
-                    Phone No. {user?.phone ? user?.phone : "N/A"}
-                  </p>
-                  <p className="description">Date Joined: 12/09/2023</p>
+          {user?.role === "creator" && eventKey === "link-0" && (
+            <Col md="4">
+              <Card className="card-user">
+                <div className="card-image">
+                  {/* <img
+                    alt="..."
+                    src={require("assets/img/photo-1431578500526-4d9613015464.jpeg")}
+                  ></img> */}
                 </div>
-                <div className="description text-center">
-                  {/* <div>no of likes, no of comments, no of bookmarks</div> */}
-                  <span className="mx-1 text-info">likes: 15</span> |{" "}
-                  <span className="mx-1 text-muted">comments: 15</span> |{" "}
-                  <span className="mx-1 text-warning">bookmarks: 15</span>
-                </div>
-              </Card.Body>
-              <hr></hr>
-              <div className="button-container mr-auto ml-auto my-3">
-                {user?.role === "user" && !user?.status ? (
-                  <Button
-                    className="btn-outlined btn-icon"
-                    // href="#"
-                    // onClick={(e) => e.preventDefault()}
-                    variant="info"
-                    onClick={() => {
-                      const ids = { id, token };
-                      dispatch(changeUserRole(ids));
-                    }}
-                  >
-                    {/* <i className="fab fa-facebook-square"></i> */}
-                    Make A Creator
-                  </Button>
-                ) : (
-                  ""
-                )}
-                {user?.role === "creator" && !user?.status ? (
-                  <Button
-                    className="btn-outlined btn-icon"
-                    // href="#"
-                    onClick={() => {
-                      const ids = { id, token };
-                      dispatch(suspendAUser(ids));
-                    }}
-                    variant="warning"
-                  >
-                    {/* <i className="fab fa-twitter"></i> */}
-                    Suspend creator
-                  </Button>
-                ) : (
-                  ""
-                )}
-                {user?.status ? (
-                  <Button
-                    className="btn-outlined btn-icon"
-                    // href="#"
-                    onClick={() => {
-                      const ids = { id, token };
-                      dispatch(UnsuspendAUser(ids));
-                    }}
-                    variant="warning"
-                  >
-                    {/* <i className="fab fa-twitter"></i> */}
-                    Unsuspend creator
-                  </Button>
-                ) : (
-                  ""
-                )}
-                {/* <Button
+                <Card.Body>
+                  <div className="author">
+                    <a href="#" onClick={(e) => e.preventDefault()}>
+                      <img
+                        alt="..."
+                        className="avatar border-gray"
+                        src={require("assets/img/default-avatar.png")}
+                      ></img>
+                      <h5 className="title">{user?.username}</h5>
+                    </a>
+                    <span className="description">
+                      {user?.email} | {user?.phone ? user?.phone : "N/A"}
+                    </span>
+                    <p className="description">Date Joined: 12/09/2023</p>
+                  </div>
+                  <div className="description text-center">
+                    {/* <div>no of likes, no of comments, no of bookmarks</div> */}
+                    <span className="mx-1 text-info">likes: 10</span> |{" "}
+                    <span className="mx-1 text-muted">comments: 15</span> |{" "}
+                    <span className="mx-1 text-warning">bookmarks: 5</span>
+                  </div>
+                </Card.Body>
+                <hr></hr>
+                <div className="button-container mr-auto ml-auto my-3">
+                  {user?.role === "user" && !user?.status ? (
+                    <Button
+                      className="btn-outlined btn-icon"
+                      // href="#"
+                      // onClick={(e) => e.preventDefault()}
+                      variant="info"
+                      onClick={() => {
+                        const ids = { id, token };
+                        dispatch(changeUserRole(ids));
+                      }}
+                    >
+                      {/* <i className="fab fa-facebook-square"></i> */}
+                      Make A Creator
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                  {user?.role === "creator" && !user?.status ? (
+                    <Button
+                      className="btn-outlined btn-icon"
+                      // href="#"
+                      onClick={() => {
+                        const ids = { id, token };
+                        dispatch(suspendAUser(ids));
+                      }}
+                      variant="warning"
+                    >
+                      {/* <i className="fab fa-twitter"></i> */}
+                      Suspend creator
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                  {user?.status ? (
+                    <Button
+                      className="btn-outlined btn-icon"
+                      // href="#"
+                      onClick={() => {
+                        const ids = { id, token };
+                        dispatch(UnsuspendAUser(ids));
+                      }}
+                      variant="warning"
+                    >
+                      {/* <i className="fab fa-twitter"></i> */}
+                      Unsuspend creator
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                  {/* <Button
                   className="btn-outlined btn-icon"
                   href="#"
                   onClick={(e) => e.preventDefault()}
@@ -316,9 +258,212 @@ function User() {
                 >
                   <i className="fab fa-google-plus-square"></i>
                 </Button> */}
-              </div>
-            </Card>
-          </Col>
+                </div>
+              </Card>
+            </Col>
+          )}
+          {user?.role === "user" && eventKey === "link-0" && (
+            <Col md="4">
+              <Card className="card-user">
+                <div className="card-image">
+                  {/* <img
+                    alt="..."
+                    src={require("assets/img/photo-1431578500526-4d9613015464.jpeg")}
+                  ></img> */}
+                </div>
+                <Card.Body>
+                  <div className="author">
+                    <a href="#" onClick={(e) => e.preventDefault()}>
+                      <img
+                        alt="..."
+                        className="avatar border-gray"
+                        src={require("assets/img/default-avatar.png")}
+                      ></img>
+                      <h5 className="title">{user?.username}</h5>
+                    </a>
+                    <span className="description">
+                      {user?.email} | {user?.phone ? user?.phone : "N/A"}
+                    </span>
+                    <p className="description">Date Joined: 12/09/2023</p>
+                  </div>
+                  <div className="description text-center">
+                    {/* <div>no of likes, no of comments, no of bookmarks</div> */}
+                    <span className="mx-1 text-info">likes: 10</span> |{" "}
+                    <span className="mx-1 text-muted">comments: 15</span> |{" "}
+                    <span className="mx-1 text-warning">bookmarks: 5</span>
+                  </div>
+                </Card.Body>
+                <hr></hr>
+                <div className="button-container mr-auto ml-auto my-3">
+                  {user?.role === "user" && !user?.status ? (
+                    <Button
+                      className="btn-outlined btn-icon"
+                      // href="#"
+                      // onClick={(e) => e.preventDefault()}
+                      variant="info"
+                      onClick={() => {
+                        const ids = { id, token };
+                        dispatch(changeUserRole(ids));
+                      }}
+                    >
+                      {/* <i className="fab fa-facebook-square"></i> */}
+                      Make A Creator
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                  {user?.role === "creator" && !user?.status ? (
+                    <Button
+                      className="btn-outlined btn-icon"
+                      // href="#"
+                      onClick={() => {
+                        const ids = { id, token };
+                        dispatch(suspendAUser(ids));
+                      }}
+                      variant="warning"
+                    >
+                      {/* <i className="fab fa-twitter"></i> */}
+                      Suspend creator
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                  {user?.status ? (
+                    <Button
+                      className="btn-outlined btn-icon"
+                      // href="#"
+                      onClick={() => {
+                        const ids = { id, token };
+                        dispatch(UnsuspendAUser(ids));
+                      }}
+                      variant="warning"
+                    >
+                      {/* <i className="fab fa-twitter"></i> */}
+                      Unsuspend creator
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                  {/* <Button
+                  className="btn-outlined btn-icon"
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  variant="link"
+                >
+                  <i className="fab fa-google-plus-square"></i>
+                </Button> */}
+                </div>
+              </Card>
+            </Col>
+          )}
+          {user?.role === "user" && (
+            <Col md="12 mx-3">
+              {eventKey === "link-0" && (
+                <Row>
+                  <Card className="strpied-tabled-with-hover">
+                    <Card.Header className="d-flex justify-content-between">
+                      <div>
+                        <Card.Title as="h4">
+                          List of Posts Commented on
+                        </Card.Title>
+                      </div>
+                    </Card.Header>
+                    <Card.Body className="table-full-width table-responsive px-0">
+                      <Table className="table-hover table-striped">
+                        <thead>
+                          <tr>
+                            <th className="border-0">Title</th>
+                            <th className="border-0">Author</th>
+                            <th className="border-0">comment</th>
+                            <th className="border-0">Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <Link to={`/admin/post/21`}>
+                                Post Title one of September
+                              </Link>
+                            </td>
+                            <td>Dakota Joe</td>
+                            <td>
+                              Lorem ipsum dolor sit amet consectetur adipisicing
+                              elit. Maxime mollitia, amet consectetur
+                              adipisicing elit.
+                            </td>
+                            <td>25/09/2023</td>
+                          </tr>
+                        </tbody>
+                      </Table>
+                    </Card.Body>
+                  </Card>
+                </Row>
+              )}
+              {eventKey === "link-1" && (
+                <Row>
+                  <Card className="strpied-tabled-with-hover mr-3">
+                    <Card.Header className="d-flex justify-content-between">
+                      <div>
+                        <Card.Title as="h4">All Liked Posts</Card.Title>
+                      </div>
+                    </Card.Header>
+                    <Card.Body className="table-full-width table-responsive px-0">
+                      <Table className="table-hover table-striped">
+                        <thead>
+                          <tr>
+                            <th className="border-0">Title</th>
+                            <th className="border-0">Author</th>
+                            <th className="border-0">Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Niger</td>
+                            <td>Dakota Rice</td>
+                            <td>Dakota Rice</td>
+                          </tr>
+                          <tr>
+                            <td>Niger</td>
+                            <td>Dakota Rice</td>
+                            <td>Dakota Rice</td>
+                          </tr>
+                        </tbody>
+                      </Table>
+                    </Card.Body>
+                  </Card>
+                </Row>
+              )}
+              {eventKey === "link-2" && (
+                <Row>
+                  <Card className="strpied-tabled-with-hover">
+                    <Card.Header className="d-flex justify-content-between">
+                      <div>
+                        <Card.Title as="h4">List of bookmarks</Card.Title>
+                      </div>
+                    </Card.Header>
+                    <Card.Body className="table-full-width table-responsive px-0">
+                      <Table className="table-hover table-striped">
+                        <thead>
+                          <tr>
+                            <th className="border-0">Title</th>
+                            <th className="border-0">Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {bookmarks?.map((item, i) => (
+                            <tr key={i}>
+                              <td>{item?.post?.title}</td>
+                              <td>{moment(item?.createdAt).format("L")}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    </Card.Body>
+                  </Card>
+                </Row>
+              )}
+            </Col>
+          )}
         </Row>
       </Container>
     </>
